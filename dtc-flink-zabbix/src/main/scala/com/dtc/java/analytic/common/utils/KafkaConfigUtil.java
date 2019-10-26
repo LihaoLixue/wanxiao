@@ -4,6 +4,7 @@ package com.dtc.java.analytic.common.utils;
 import com.dtc.java.analytic.common.constant.PropertiesConstants;
 import com.dtc.java.analytic.common.model.MetricEvent;
 import com.dtc.java.analytic.common.schemas.MetricSchema;
+import org.apache.flink.api.common.serialization.SimpleStringSchema;
 import org.apache.flink.api.java.utils.ParameterTool;
 import org.apache.flink.streaming.api.datastream.DataStreamSource;
 import org.apache.flink.streaming.api.environment.StreamExecutionEnvironment;
@@ -60,7 +61,7 @@ public class KafkaConfigUtil {
     }
 
 
-    public static DataStreamSource<MetricEvent> buildSource(StreamExecutionEnvironment env) throws IllegalAccessException {
+    public static DataStreamSource buildSource(StreamExecutionEnvironment env) throws IllegalAccessException {
         ParameterTool parameter = (ParameterTool) env.getConfig().getGlobalJobParameters();
         String topic = parameter.get(PropertiesConstants.KAFKA_TOPIC);
         Long time = parameter.getLong(PropertiesConstants.CONSUMER_FROM_TIME, 0L);
@@ -74,10 +75,10 @@ public class KafkaConfigUtil {
      * @return
      * @throws IllegalAccessException
      */
-    public static DataStreamSource<MetricEvent> buildSource(StreamExecutionEnvironment env, String topic, Long time) throws IllegalAccessException {
+    public static DataStreamSource buildSource(StreamExecutionEnvironment env, String topic, Long time) throws IllegalAccessException {
         ParameterTool parameterTool = (ParameterTool) env.getConfig().getGlobalJobParameters();
         Properties props = buildKafkaProps(parameterTool);
-        FlinkKafkaConsumer<MetricEvent> consumer = new FlinkKafkaConsumer(topic, new MetricSchema(), props);
+        FlinkKafkaConsumer consumer = new FlinkKafkaConsumer(topic, new SimpleStringSchema(), props);
         consumer.setStartFromLatest();
         //重置offset到time时刻
         if (time != 0L) {

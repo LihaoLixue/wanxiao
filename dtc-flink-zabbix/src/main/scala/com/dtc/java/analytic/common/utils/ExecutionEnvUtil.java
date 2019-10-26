@@ -62,8 +62,8 @@ public class ExecutionEnvUtil {
         env.getCheckpointConfig().enableExternalizedCheckpoints(CheckpointConfig.ExternalizedCheckpointCleanup.RETAIN_ON_CANCELLATION);
         // 设置模式为exactly-once （这是默认值）
         env.getCheckpointConfig().setCheckpointingMode(CheckpointingMode.EXACTLY_ONCE);
-        env.setStateBackend(new
-                FsStateBackend(parameterTool.get(PropertiesConstants.STATE_BACKEND,"")));
+//        env.setStateBackend(new
+//                FsStateBackend(parameterTool.get(PropertiesConstants.STATE_BACKEND,"")));
         env.setStreamTimeCharacteristic(TimeCharacteristic.ProcessingTime);
         return env;
     }
